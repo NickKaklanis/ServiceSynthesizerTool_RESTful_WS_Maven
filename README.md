@@ -9,7 +9,7 @@ To build the SST web-service:
 
 2) Run "mvn clean install" in the root directory of the source code
 
-Important note:
+### Important note:
 
 Please modify the contents of the [config.properties](https://github.com/NickKaklanis/ServiceSynthesizerTool_RESTful_WS_Maven/blob/master/src/main/webapp/WEB-INF/config.properties) according to your preferences
 
