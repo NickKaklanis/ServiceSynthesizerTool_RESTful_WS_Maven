@@ -1,5 +1,5 @@
-RuleBasedMatchMaker_RESTful_WS_Maven
-====================================
+ServiceSynthesizerTool_RESTful_WS_Maven
+=======================================
 
 A Maven project that generates the RESTful web-service of the CLOUD4All Service Synthesizer Tool (SST).
 
@@ -9,9 +9,9 @@ To build the SST web-service:
 
 2) Run "mvn clean install" in the root directory of the source code
 
-Important Note:
+Important note:
 
-1) Please complete...
+Please modify the contents of the [config.properties](https://github.com/NickKaklanis/ServiceSynthesizerTool_RESTful_WS_Maven/blob/master/src/main/webapp/WEB-INF/config.properties) according to your preferences
 
 ### Funding Acknowledgement
 
