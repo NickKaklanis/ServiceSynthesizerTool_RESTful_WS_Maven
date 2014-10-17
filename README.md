@@ -11,7 +11,7 @@ To build the SST web-service:
 
 ### Important note:
 
-Please modify the contents of the [config.properties](https://github.com/NickKaklanis/ServiceSynthesizerTool_RESTful_WS_Maven/blob/master/src/main/webapp/WEB-INF/config.properties) according to your preferences
+Please modify the contents of the [config.properties](https://github.com/NickKaklanis/ServiceSynthesizerTool_RESTful_WS_Maven/blob/master/src/main/webapp/WEB-INF/config.properties) file according to your preferences
 
 ### Funding Acknowledgement
 
