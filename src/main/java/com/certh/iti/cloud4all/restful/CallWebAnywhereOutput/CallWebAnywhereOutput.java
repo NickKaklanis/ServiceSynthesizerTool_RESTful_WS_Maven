@@ -17,32 +17,32 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "urlToBeCalled"
+    "finalUrl"
 })
 public class CallWebAnywhereOutput {
 
     /**
      * 
      */
-    @JsonProperty("urlToBeCalled")
-    private String urlToBeCalled;
+    @JsonProperty("finalUrl")
+    private String finalUrl;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      */
-    @JsonProperty("urlToBeCalled")
-    public String getUrlToBeCalled() {
-        return urlToBeCalled;
+    @JsonProperty("finalUrl")
+    public String getFinalUrl() {
+        return finalUrl;
     }
 
     /**
      * 
      */
-    @JsonProperty("urlToBeCalled")
-    public void setUrlToBeCalled(String urlToBeCalled) {
-        this.urlToBeCalled = urlToBeCalled;
+    @JsonProperty("finalUrl")
+    public void setFinalUrl(String finalUrl) {
+        this.finalUrl = finalUrl;
     }
 
     @Override
