@@ -14,6 +14,8 @@ import java.util.Properties;
  */
 public class SST_Manager 
 {
+    public static final boolean RUN_INTEGRATION_TESTS_ON_BUILD = true;
+    
     public String APACHE_SERVER_IP;
     public String HTDOCS_DIR;
     public String DIR_IN_HTDOCS;
@@ -22,6 +24,7 @@ public class SST_Manager
     public String X_MASHAPE_AUTHORIZATION_KEY;
     public String EYEFACE_EMAIL;
     public String EYEFACE_PASSWORD;
+    public boolean USE_TIMESTAMP_IN_OUTPUT_FILENAMES;
     
     public Map HTTPStatusCodes;
     
@@ -56,6 +59,7 @@ public class SST_Manager
             X_MASHAPE_AUTHORIZATION_KEY = prop.getProperty("xMashapeAuthorizationKey");   
             EYEFACE_EMAIL = prop.getProperty("eyefaceEmail");
             EYEFACE_PASSWORD = prop.getProperty("eyefacePassword");
+            USE_TIMESTAMP_IN_OUTPUT_FILENAMES = Boolean.parseBoolean(prop.getProperty("useTimestampInOutputFilenames"));
  	} 
         catch (IOException ex) 
         {
@@ -72,6 +76,9 @@ public class SST_Manager
                 DELETE_FILES_OLDER_THAN_THESE_MINUTES = Integer.parseInt(prop.getProperty("deleteFilesOlderThanTheseMinutes"));
                 JAVA_SRC_PATH = prop.getProperty("javaSrcPath");
                 X_MASHAPE_AUTHORIZATION_KEY = prop.getProperty("xMashapeAuthorizationKey");
+                EYEFACE_EMAIL = prop.getProperty("eyefaceEmail");
+                EYEFACE_PASSWORD = prop.getProperty("eyefacePassword");
+                USE_TIMESTAMP_IN_OUTPUT_FILENAMES = Boolean.parseBoolean(prop.getProperty("useTimestampInOutputFilenames"));
             }
             catch (IOException e) 
             {
