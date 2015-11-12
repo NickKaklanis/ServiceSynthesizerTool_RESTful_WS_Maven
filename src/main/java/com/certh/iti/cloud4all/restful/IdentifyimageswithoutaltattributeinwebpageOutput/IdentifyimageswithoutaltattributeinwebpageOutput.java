@@ -17,32 +17,32 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "finalUrl"
+    "urlOfGeneratedPage"
 })
 public class IdentifyimageswithoutaltattributeinwebpageOutput {
 
     /**
      * 
      */
-    @JsonProperty("finalUrl")
-    private String finalUrl;
+    @JsonProperty("urlOfGeneratedPage")
+    private String urlOfGeneratedPage;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      */
-    @JsonProperty("finalUrl")
-    public String getFinalUrl() {
-        return finalUrl;
+    @JsonProperty("urlOfGeneratedPage")
+    public String getUrlOfGeneratedPage() {
+        return urlOfGeneratedPage;
     }
 
     /**
      * 
      */
-    @JsonProperty("finalUrl")
-    public void setFinalUrl(String finalUrl) {
-        this.finalUrl = finalUrl;
+    @JsonProperty("urlOfGeneratedPage")
+    public void setUrlOfGeneratedPage(String urlOfGeneratedPage) {
+        this.urlOfGeneratedPage = urlOfGeneratedPage;
     }
 
     @Override

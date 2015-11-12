@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "inputUrl"
+    "captchaImageUrl"
 })
 public class CaptchaResolverInput {
 
@@ -26,8 +26,8 @@ public class CaptchaResolverInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    private String inputUrl;
+    @JsonProperty("captchaImageUrl")
+    private String captchaImageUrl;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -36,9 +36,9 @@ public class CaptchaResolverInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    public String getInputUrl() {
-        return inputUrl;
+    @JsonProperty("captchaImageUrl")
+    public String getCaptchaImageUrl() {
+        return captchaImageUrl;
     }
 
     /**
@@ -46,9 +46,9 @@ public class CaptchaResolverInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    public void setInputUrl(String inputUrl) {
-        this.inputUrl = inputUrl;
+    @JsonProperty("captchaImageUrl")
+    public void setCaptchaImageUrl(String captchaImageUrl) {
+        this.captchaImageUrl = captchaImageUrl;
     }
 
     @Override

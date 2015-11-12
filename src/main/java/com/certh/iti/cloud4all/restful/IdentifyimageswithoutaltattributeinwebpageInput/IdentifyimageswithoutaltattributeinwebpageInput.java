@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "inputUrl"
+    "url"
 })
 public class IdentifyimageswithoutaltattributeinwebpageInput {
 
@@ -26,8 +26,8 @@ public class IdentifyimageswithoutaltattributeinwebpageInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    private String inputUrl;
+    @JsonProperty("url")
+    private String url;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -36,9 +36,9 @@ public class IdentifyimageswithoutaltattributeinwebpageInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    public String getInputUrl() {
-        return inputUrl;
+    @JsonProperty("url")
+    public String getUrl() {
+        return url;
     }
 
     /**
@@ -46,9 +46,9 @@ public class IdentifyimageswithoutaltattributeinwebpageInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    public void setInputUrl(String inputUrl) {
-        this.inputUrl = inputUrl;
+    @JsonProperty("url")
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override

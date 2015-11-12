@@ -114,7 +114,6 @@ public class TranslationManager
     private TranslationManager() 
     {
         gson = new Gson();
-        //gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
     }
     
     public static TranslationManager getInstance() 

@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "finalUrl",
+    "urlOfTranslatedPage",
     "targetLanguageCode"
 })
 public class TranslatewebpageOutput {
@@ -25,8 +25,8 @@ public class TranslatewebpageOutput {
     /**
      * 
      */
-    @JsonProperty("finalUrl")
-    private String finalUrl;
+    @JsonProperty("urlOfTranslatedPage")
+    private String urlOfTranslatedPage;
     /**
      * 
      * (Required)
@@ -40,17 +40,17 @@ public class TranslatewebpageOutput {
     /**
      * 
      */
-    @JsonProperty("finalUrl")
-    public String getFinalUrl() {
-        return finalUrl;
+    @JsonProperty("urlOfTranslatedPage")
+    public String getUrlOfTranslatedPage() {
+        return urlOfTranslatedPage;
     }
 
     /**
      * 
      */
-    @JsonProperty("finalUrl")
-    public void setFinalUrl(String finalUrl) {
-        this.finalUrl = finalUrl;
+    @JsonProperty("urlOfTranslatedPage")
+    public void setUrlOfTranslatedPage(String urlOfTranslatedPage) {
+        this.urlOfTranslatedPage = urlOfTranslatedPage;
     }
 
     /**

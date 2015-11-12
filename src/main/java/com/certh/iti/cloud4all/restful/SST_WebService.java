@@ -1,26 +1,12 @@
 package com.certh.iti.cloud4all.restful;
 
-import com.cedarsoftware.util.io.JsonWriter;
-import com.certh.iti.cloud4all.restful.mappedVariable;
 import com.certh.iti.cloud4all.translation.TranslationManager;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlImage;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.async.Callback;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.http.options.Options;
 import com.sun.codemodel.JCodeModel;
-import org.eclipse.persistence.jaxb.rs.MOXyJsonProvider;
-import org.eclipse.persistence.oxm.JSONWithPadding;
 import java.io.*;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.*;
 import java.nio.charset.Charset;
@@ -33,19 +19,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.JavaType;
-import org.json.JSONObject;
 import org.jsonschema2pojo.SchemaMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
 
 
 @Path("/SST")
@@ -160,23 +140,6 @@ public class SST_WebService
     @Path("/getOutputJsonSchema/{tmpServiceName}")
     public Response getOutputJsonSchema(@PathParam("tmpServiceName") String tempServiceName)
     {
-        /*String res = "";
-        try
-        {
-            URL jsonSchemaURL = new URL("http://" + ApacheServerIP + "/" + dirInHtdocs + "/ServicesJsonSchemas/" + tempServiceName + "_Output.json");
-            URLConnection connection = jsonSchemaURL.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) 
-                response.append(inputLine);
-            in.close();
-            res = response.toString();
-        }
-        catch(Exception e) 
-        {
-            System.out.println("getOutputJsonSchema EXCEPTION! -> " + e.getMessage());
-        }*/
         String res = "";
         try
         {
@@ -350,28 +313,6 @@ public class SST_WebService
         return res;
     }
     
-    /*private ArrayList<String> getNamesOfServicesToBeCalledSequentially(ArrayList<ServiceInputTemplate> tmpInput)
-    {
-        ArrayList<String> res = new ArrayList<String>();
-        for(int i=0; i<tmpInput.size(); i++)
-        {
-            ServiceInputTemplate tmpServiceInputTemplate = tmpInput.get(i);
-            if(existsInList(res, tmpServiceInputTemplate.getServiceName()) == false)
-                res.add(tmpServiceInputTemplate.getServiceName());
-        }
-        return res;
-    }
-    
-    private boolean existsInList(ArrayList<String> tmpList, String tmpStrToSearch)
-    {
-        for(int i=0; i<tmpList.size(); i++)
-        {
-            if(tmpList.get(i).equals(tmpStrToSearch))
-                return true;                    
-        }
-        return false;
-    }*/
-    
     public int findIndexOfAServiceInInputArrayList(ArrayList<ServiceInputTemplate> tmpInputArrayList, String tmpServiceName)
     {
         for(int i=0; i<tmpInputArrayList.size(); i++)
@@ -391,732 +332,10 @@ public class SST_WebService
     @Consumes("application/json")
     public Response callCombinedServices(SynthesizerInput tmpInput)
     {
-//        String finalResultStr = "";
-//        Map<String, Object> tmpOutput = new HashMap<String, Object>();
-//        Object tempoOutput = null;
-//        
-//        //--------------------------//
-//        //Call the first web service//
-//        //--------------------------//
-//        Response tmpFirstServiceResponse = null;
-//        if(tmpInput.getFirstServiceName().equals("IPtoLatLng"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.IPtoLatLngInput.IPtoLatLngInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_IPtoLatLng((com.certh.iti.cloud4all.restful.IPtoLatLngInput.IPtoLatLngInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput.class);
-//            
-//            tmpOutput.put("IPtoLatLng", tempoOutput);
-//            finalResultStr = finalResultStr + " \"IPtoLatLng\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("Weather"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.WeatherInput.WeatherInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_Weather((com.certh.iti.cloud4all.restful.WeatherInput.WeatherInput)tmpInput2.getFirstServiceInput());
-//        
-//            Type listType = new TypeToken<List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>>() {}.getType();
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), listType);
-//            
-//            tmpOutput.put("Weather", tempoOutput);
-//            finalResultStr = finalResultStr + " \"Weather\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("TelizeGeolocation"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.TelizeGeolocationInput.TelizeGeolocationInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_TelizeGeolocation((com.certh.iti.cloud4all.restful.TelizeGeolocationInput.TelizeGeolocationInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput.class);
-//        
-//            tmpOutput.put("TelizeGeolocation", tempoOutput);
-//            finalResultStr = finalResultStr + " \"TelizeGeolocation\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("StaticImageMap"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_StaticImageMap((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.StaticImageMapOutput.StaticImageMapOutput.class);
-//        
-//            tmpOutput.put("StaticImageMap", tempoOutput);
-//            finalResultStr = finalResultStr + " \"StaticImageMap\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("URLScreenshotGenerator"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.URLScreenshotGeneratorInput.URLScreenshotGeneratorInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_URLScreenshotGenerator((com.certh.iti.cloud4all.restful.URLScreenshotGeneratorInput.URLScreenshotGeneratorInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.URLScreenshotGeneratorOutput.URLScreenshotGeneratorOutput.class);
-//        
-//            tmpOutput.put("URLScreenshotGenerator", tempoOutput);
-//            finalResultStr = finalResultStr + " \"URLScreenshotGenerator\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("Translatewebpage"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.TranslatewebpageInput.TranslatewebpageInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_Translatewebpage((com.certh.iti.cloud4all.restful.TranslatewebpageInput.TranslatewebpageInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.TranslatewebpageOutput.TranslatewebpageOutput.class);
-//        
-//            tmpOutput.put("Translatewebpage", tempoOutput);
-//            finalResultStr = finalResultStr + " \"Translatewebpage\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("Identifyimageswithoutaltattributeinwebpage"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageInput.IdentifyimageswithoutaltattributeinwebpageInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_Identifyimageswithoutaltattributeinwebpage((com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageInput.IdentifyimageswithoutaltattributeinwebpageInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageOutput.IdentifyimageswithoutaltattributeinwebpageOutput.class);
-//        
-//            tmpOutput.put("Identifyimageswithoutaltattributeinwebpage", tempoOutput);
-//            finalResultStr = finalResultStr + " \"Identifyimageswithoutaltattributeinwebpage\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("CallWebAnywhere"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.CallWebAnywhereInput.CallWebAnywhereInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_CallWebAnywhere((com.certh.iti.cloud4all.restful.CallWebAnywhereInput.CallWebAnywhereInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.CallWebAnywhereOutput.CallWebAnywhereOutput.class);
-//        
-//            tmpOutput.put("CallWebAnywhere", tempoOutput);
-//            finalResultStr = finalResultStr + " \"CallWebAnywhere\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("CaptchaResolver"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.CaptchaResolverInput.CaptchaResolverInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_CaptchaResolver((com.certh.iti.cloud4all.restful.CaptchaResolverInput.CaptchaResolverInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.CaptchaResolverOutput.CaptchaResolverOutput.class);
-//        
-//            tmpOutput.put("CaptchaResolver", tempoOutput);
-//            finalResultStr = finalResultStr + " \"CaptchaResolver\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("TextToSpeech"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.TextToSpeechInput.TextToSpeechInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_TextToSpeech((com.certh.iti.cloud4all.restful.TextToSpeechInput.TextToSpeechInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.TextToSpeechOutput.TextToSpeechOutput.class);
-//        
-//            tmpOutput.put("TextToSpeech", tempoOutput);
-//            finalResultStr = finalResultStr + " \"TextToSpeech\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        else if(tmpInput.getFirstServiceName().equals("FontConverter"))
-//        {
-//            Type inputType = new TypeToken<SynthesizerInput<com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput>>() { }.getType();
-//            SynthesizerInput tmpInput2 = TranslationManager.getInstance().gson.fromJson(TranslationManager.getInstance().gson.toJson(tmpInput), inputType);
-//            tmpFirstServiceResponse = call_FontConverter((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tmpInput2.getFirstServiceInput());
-//            tempoOutput = TranslationManager.getInstance().gson.fromJson(tmpFirstServiceResponse.getEntity().toString(), com.certh.iti.cloud4all.restful.FontConverterOutput.FontConverterOutput.class);
-//        
-//            tmpOutput.put("FontConverter", tempoOutput);
-//            finalResultStr = finalResultStr + " \"FontConverter\": " + TranslationManager.getInstance().gson.toJson(tempoOutput) + ",";
-//        }
-//        //----------------------------------------------------------//
-//        //(Step 1 of 5) ADD CONTENT HERE WHEN A NEW SERVICE IS ADDED//
-//        //----------------------------------------------------------//
-//                
-//        //if the first service fails -> return NULL
-//        if(tmpFirstServiceResponse == null)
-//            return Response.ok("NULL!").build();
-//        //else
-//        //    finalResult = "\"" + tempfirstServiceToBeCalled + "\": {\n" + tmpFirstServiceResponse.getEntity().toString().substring(tmpFirstServiceResponse.getEntity().toString().indexOf('"'), tmpFirstServiceResponse.getEntity().toString().lastIndexOf('"')+1) + "\n},";
-//        
-//        //find the name of the services that have to be executed sequentially
-//        ArrayList<String> namesOfServicesToBeCalledSequentially = getNamesOfServicesToBeCalledSequentially(tmpInput.getMappedVariables());
-//        
-//        for(int i=1; i<namesOfServicesToBeCalledSequentially.size(); i++)
-//        {
-//            String tmpCurService = namesOfServicesToBeCalledSequentially.get(i);
-//            
-//            tempoOutput = null;
-//            Object tempoInput = null;
-//            
-//            //Initialize the input for current service
-//            if(tmpCurService.equals("IPtoLatLng"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.IPtoLatLngInput.IPtoLatLngInput();
-//            else if(tmpCurService.equals("Weather"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.WeatherInput.WeatherInput();                        
-//            else if(tmpCurService.equals("TelizeGeolocation"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.TelizeGeolocationInput.TelizeGeolocationInput();
-//            else if(tmpCurService.equals("StaticImageMap"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput();
-//            else if(tmpCurService.equals("URLScreenshotGenerator"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.URLScreenshotGeneratorInput.URLScreenshotGeneratorInput();
-//            else if(tmpCurService.equals("Translatewebpage"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.TranslatewebpageInput.TranslatewebpageInput();
-//            else if(tmpCurService.equals("Identifyimageswithoutaltattributeinwebpage"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageInput.IdentifyimageswithoutaltattributeinwebpageInput();
-//            else if(tmpCurService.equals("CallWebAnywhere"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.CallWebAnywhereInput.CallWebAnywhereInput();
-//            else if(tmpCurService.equals("CaptchaResolver"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.CaptchaResolverInput.CaptchaResolverInput();
-//            else if(tmpCurService.equals("TextToSpeech"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.TextToSpeechInput.TextToSpeechInput();
-//            else if(tmpCurService.equals("FontConverter"))
-//                tempoInput = new com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput();
-//            //----------------------------------------------------------//
-//            //(Step 2 of 5) ADD CONTENT HERE WHEN A NEW SERVICE IS ADDED//
-//            //----------------------------------------------------------//
-//            
-//            ArrayList<String[]> mappingsBetweenCurAndPreviousServices = getMappingsBetweenCurAndPreviousServices(tmpCurService, tmpInput.getMappedVariables());
-//            if(mappingsBetweenCurAndPreviousServices.size() == 0)
-//                return Response.ok("EXCEPTION -> getMappingsBetweenCurAndPreviousServices size is 0! tmpCurService:" + tmpCurService + ", tmpInput.mappedVariables.size():" + Integer.toString(tmpInput.getMappedVariables().size())).build();
-//            
-//            //Examine the mapped variables one-by-one
-//            for(int j=0; j<mappingsBetweenCurAndPreviousServices.size(); j++)
-//            {
-//                String[] tmpMapping = mappingsBetweenCurAndPreviousServices.get(j);
-//                String tmpServiceFrom = tmpMapping[0];      //the name of the first service
-//                String tmpVariableFrom = tmpMapping[1];     //the name of the first variable
-//                String tmpVariableTo = tmpMapping[2];       //the name of the second variable
-//                String tmpVariableFrom_value = "";          //the common value (of the two variables)
-//                
-//                //Initialize the output of the first sevice
-//                tempoOutput = getOutputOfAService(tmpOutput, tmpServiceFrom);
-//                
-//                //set the common value by examining the output of the first service
-//                if(tmpServiceFrom.equals("IPtoLatLng"))
-//                {
-//                    if(tmpVariableFrom.equals("areacode"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getAreacode();
-//                    else if(tmpVariableFrom.equals("city"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getCity();
-//                    else if(tmpVariableFrom.equals("countryFullName"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getCountryFullName();
-//                    else if(tmpVariableFrom.equals("country"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getCountry();
-//                    else if(tmpVariableFrom.equals("ip"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getIp();
-//                    else if(tmpVariableFrom.equals("lat"))
-//                        tmpVariableFrom_value = Double.toString(((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getLat());
-//                    else if(tmpVariableFrom.equals("lng"))
-//                        tmpVariableFrom_value = Double.toString(((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getLng());
-//                    else if(tmpVariableFrom.equals("stateFullName"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getStateFullName();
-//                    else if(tmpVariableFrom.equals("state"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getState();
-//                    else if(tmpVariableFrom.equals("zip"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput)tempoOutput).getZip();
-//                    
-//                }
-//                else if(tmpServiceFrom.equals("Weather"))
-//                {
-//                    if(tmpVariableFrom.equals("0"))
-//                        tmpVariableFrom_value = "unknown";
-//                    else if(tmpVariableFrom.equals("condition"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(0).getCondition();
-//                    else if(tmpVariableFrom.equals("day_of_week"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(0).getDayOfWeek();
-//                    else if(tmpVariableFrom.equals("high_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(0).getHighCelsius();
-//                    else if(tmpVariableFrom.equals("high"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(0).getHigh();
-//                    else if(tmpVariableFrom.equals("low_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(0).getLowCelsius();
-//                    else if(tmpVariableFrom.equals("low"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(0).getLow();
-//                    
-//                    else if(tmpVariableFrom.equals("1"))
-//                        tmpVariableFrom_value = "unknown";
-//                    else if(tmpVariableFrom.equals("1_condition"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(1).getCondition();
-//                    else if(tmpVariableFrom.equals("1_day_of_week"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(1).getDayOfWeek();
-//                    else if(tmpVariableFrom.equals("1_high_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(1).getHighCelsius();
-//                    else if(tmpVariableFrom.equals("1_high"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(1).getHigh();
-//                    else if(tmpVariableFrom.equals("1_low_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(1).getLowCelsius();
-//                    else if(tmpVariableFrom.equals("1_low"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(1).getLow();
-//                    
-//                    else if(tmpVariableFrom.equals("2"))
-//                        tmpVariableFrom_value = "unknown";
-//                    else if(tmpVariableFrom.equals("2_condition"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(2).getCondition();
-//                    else if(tmpVariableFrom.equals("2_day_of_week"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(2).getDayOfWeek();
-//                    else if(tmpVariableFrom.equals("2_high_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(2).getHighCelsius();
-//                    else if(tmpVariableFrom.equals("2_high"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(2).getHigh();
-//                    else if(tmpVariableFrom.equals("2_low_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(2).getLowCelsius();
-//                    else if(tmpVariableFrom.equals("2_low"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(2).getLow();
-//                    
-//                    else if(tmpVariableFrom.equals("3"))
-//                        tmpVariableFrom_value = "unknown";
-//                    else if(tmpVariableFrom.equals("3_condition"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(3).getCondition();
-//                    else if(tmpVariableFrom.equals("3_day_of_week"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(3).getDayOfWeek();
-//                    else if(tmpVariableFrom.equals("3_high_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(3).getHighCelsius();
-//                    else if(tmpVariableFrom.equals("3_high"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(3).getHigh();
-//                    else if(tmpVariableFrom.equals("3_low_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(3).getLowCelsius();
-//                    else if(tmpVariableFrom.equals("3_low"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(3).getLow();
-//                    
-//                    else if(tmpVariableFrom.equals("4"))
-//                        tmpVariableFrom_value = "unknown";
-//                    else if(tmpVariableFrom.equals("4_condition"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(4).getCondition();
-//                    else if(tmpVariableFrom.equals("4_day_of_week"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(4).getDayOfWeek();
-//                    else if(tmpVariableFrom.equals("4_high_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(4).getHighCelsius();
-//                    else if(tmpVariableFrom.equals("4_high"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(4).getHigh();
-//                    else if(tmpVariableFrom.equals("4_low_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(4).getLowCelsius();
-//                    else if(tmpVariableFrom.equals("4_low"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(4).getLow();
-//                    
-//                    else if(tmpVariableFrom.equals("5"))
-//                        tmpVariableFrom_value = "unknown";
-//                    else if(tmpVariableFrom.equals("5_condition"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(5).getCondition();
-//                    else if(tmpVariableFrom.equals("5_day_of_week"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(5).getDayOfWeek();
-//                    else if(tmpVariableFrom.equals("5_high_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(5).getHighCelsius();
-//                    else if(tmpVariableFrom.equals("5_high"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(5).getHigh();
-//                    else if(tmpVariableFrom.equals("5_low_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(5).getLowCelsius();
-//                    else if(tmpVariableFrom.equals("5_low"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(5).getLow();
-//                    
-//                    else if(tmpVariableFrom.equals("6"))
-//                        tmpVariableFrom_value = "unknown";
-//                    else if(tmpVariableFrom.equals("6_condition"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(6).getCondition();
-//                    else if(tmpVariableFrom.equals("6_day_of_week"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(6).getDayOfWeek();
-//                    else if(tmpVariableFrom.equals("6_high_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(6).getHighCelsius();
-//                    else if(tmpVariableFrom.equals("6_high"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(6).getHigh();
-//                    else if(tmpVariableFrom.equals("6_low_celsius"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(6).getLowCelsius();
-//                    else if(tmpVariableFrom.equals("6_low"))
-//                        tmpVariableFrom_value = ((List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>)tempoOutput).get(6).getLow();
-//                }
-//                else if(tmpServiceFrom.equals("TelizeGeolocation"))
-//                {
-//                    if(tmpVariableFrom.equals("area_code"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getAreaCode();
-//                    else if(tmpVariableFrom.equals("asn"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getAsn();
-//                    else if(tmpVariableFrom.equals("city"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getCity();
-//                    else if(tmpVariableFrom.equals("continent_code"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getContinentCode();
-//                    else if(tmpVariableFrom.equals("country_code3"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getCountryCode3();
-//                    else if(tmpVariableFrom.equals("country_code"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getCountryCode();
-//                    else if(tmpVariableFrom.equals("country"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getCountry();
-//                    else if(tmpVariableFrom.equals("dma_code"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getDmaCode();
-//                    else if(tmpVariableFrom.equals("ip"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getIp();
-//                    else if(tmpVariableFrom.equals("isp"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getIsp();
-//                    else if(tmpVariableFrom.equals("latitude"))
-//                        tmpVariableFrom_value = Double.toString(((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getLatitude());
-//                    else if(tmpVariableFrom.equals("longitude"))
-//                        tmpVariableFrom_value = Double.toString(((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getLongitude());
-//                    else if(tmpVariableFrom.equals("region_code"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getRegionCode();
-//                    else if(tmpVariableFrom.equals("region"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getRegion();
-//                    else if(tmpVariableFrom.equals("timezone"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput)tempoOutput).getTimezone();
-//                }
-//                else if(tmpServiceFrom.equals("StaticImageMap"))
-//                {
-//                    if(tmpVariableFrom.equals("html"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.StaticImageMapOutput.StaticImageMapOutput)tempoOutput).getHtml();
-//                    else if(tmpVariableFrom.equals("imageUrl"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.StaticImageMapOutput.StaticImageMapOutput)tempoOutput).getImageUrl();
-//                    else if(tmpVariableFrom.equals("providerUrl"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.StaticImageMapOutput.StaticImageMapOutput)tempoOutput).getProviderUrl();
-//                    else if(tmpVariableFrom.equals("rateLimitUrl"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.StaticImageMapOutput.StaticImageMapOutput)tempoOutput).getRateLimitUrl();
-//                    else if(tmpVariableFrom.equals("success"))
-//                        tmpVariableFrom_value = Boolean.toString(((com.certh.iti.cloud4all.restful.StaticImageMapOutput.StaticImageMapOutput)tempoOutput).getSuccess());
-//                    else if(tmpVariableFrom.equals("supported"))
-//                        tmpVariableFrom_value = Boolean.toString(((com.certh.iti.cloud4all.restful.StaticImageMapOutput.StaticImageMapOutput)tempoOutput).getSupported());
-//                    else if(tmpVariableFrom.equals("termsOfUseUrl"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.StaticImageMapOutput.StaticImageMapOutput)tempoOutput).getTermsOfUseUrl();
-//                }
-//                else if(tmpServiceFrom.equals("URLScreenshotGenerator"))
-//                {
-//                    if(tmpVariableFrom.equals("message"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.URLScreenshotGeneratorOutput.URLScreenshotGeneratorOutput)tempoOutput).getMessage();
-//                    else if(tmpVariableFrom.equals("screenshot"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.URLScreenshotGeneratorOutput.URLScreenshotGeneratorOutput)tempoOutput).getScreenshot();
-//                }
-//                else if(tmpServiceFrom.equals("Translatewebpage"))
-//                {
-//                    if(tmpVariableFrom.equals("urlOfTranslatedPage"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TranslatewebpageOutput.TranslatewebpageOutput)tempoOutput).getUrlOfTranslatedPage();
-//                    else if(tmpVariableFrom.equals("targetLanguageCode"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TranslatewebpageOutput.TranslatewebpageOutput)tempoOutput).getTargetLanguageCode();
-//                }
-//                else if(tmpServiceFrom.equals("Identifyimageswithoutaltattributeinwebpage"))
-//                {
-//                    if(tmpVariableFrom.equals("urlOfGeneratedPage"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageOutput.IdentifyimageswithoutaltattributeinwebpageOutput)tempoOutput).getUrlOfGeneratedPage();
-//                }
-//                else if(tmpServiceFrom.equals("CallWebAnywhere"))
-//                {
-//                    if(tmpVariableFrom.equals("urlToBeCalled"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.CallWebAnywhereOutput.CallWebAnywhereOutput)tempoOutput).getUrlToBeCalled();
-//                }
-//                else if(tmpServiceFrom.equals("CaptchaResolver"))
-//                {
-//                    if(tmpVariableFrom.equals("captcha"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.CaptchaResolverOutput.CaptchaResolverOutput)tempoOutput).getCaptcha();
-//                    else if(tmpVariableFrom.equals("api-message"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.CaptchaResolverOutput.CaptchaResolverOutput)tempoOutput).getApiMessage();
-//                }
-//                else if(tmpServiceFrom.equals("TextToSpeech"))
-//                {
-//                    if(tmpVariableFrom.equals("spokenTextMp3URL"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TextToSpeechOutput.TextToSpeechOutput)tempoOutput).getSpokenTextMp3URL();
-//                }
-//                else if(tmpServiceFrom.equals("FontConverter"))
-//                {
-//                    if(tmpVariableFrom.equals("fontConverterReturnedUrl"))
-//                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.FontConverterOutput.FontConverterOutput)tempoOutput).getFontConverterReturnedUrl();
-//                }
-//                //----------------------------------------------------------//
-//                //(Step 3 of 5) ADD CONTENT HERE WHEN A NEW SERVICE IS ADDED//
-//                //----------------------------------------------------------//
-//                
-//                
-//                
-//
-//                //set the common value to the input of the second web service
-//                if(tmpCurService.equals("IPtoLatLng"))
-//                {
-//                    if(tmpVariableTo.equals("ip"))
-//                        ((com.certh.iti.cloud4all.restful.IPtoLatLngInput.IPtoLatLngInput)tempoInput).setIp(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("Weather"))
-//                {
-//                    if(tmpVariableTo.equals("location"))
-//                        ((com.certh.iti.cloud4all.restful.WeatherInput.WeatherInput)tempoInput).setLocation(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("TelizeGeolocation"))
-//                {
-//                    if(tmpVariableTo.equals("ipAddress"))
-//                       ((com.certh.iti.cloud4all.restful.TelizeGeolocationInput.TelizeGeolocationInput)tempoInput).setIpAddress(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("StaticImageMap"))
-//                {
-//                    if(tmpVariableTo.equals("latitude"))
-//                       ((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tempoInput).setLatitude(tmpVariableFrom_value);
-//                    else if(tmpVariableTo.equals("longitude"))
-//                       ((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tempoInput).setLongitude(tmpVariableFrom_value);
-//                    //else if(tmpVariableTo.equals("provider"))
-//                    //   ((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tempoInput).setProvider(tmpVariableFrom_value);
-//                    //else if(tmpVariableTo.equals("height"))
-//                    //   ((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tempoInput).setHeight(tmpVariableFrom_value);
-//                    //else if(tmpVariableTo.equals("key"))
-//                    //   ((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tempoInput).setKey(tmpVariableFrom_value);
-//                    //else if(tmpVariableTo.equals("maptype"))
-//                    //   ((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tempoInput).setMaptype(tmpVariableFrom_value);
-//                    //else if(tmpVariableTo.equals("width"))
-//                    //   ((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tempoInput).setWidth(tmpVariableFrom_value);
-//                    //else if(tmpVariableTo.equals("zoom"))
-//                    //   ((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tempoInput).setZoom(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("URLScreenshotGenerator"))
-//                {
-//                    if(tmpVariableTo.equals("url"))
-//                       ((com.certh.iti.cloud4all.restful.URLScreenshotGeneratorInput.URLScreenshotGeneratorInput)tempoInput).setUrl(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("Translatewebpage"))
-//                {
-//                    if(tmpVariableTo.equals("urlToTranslate"))
-//                       ((com.certh.iti.cloud4all.restful.TranslatewebpageInput.TranslatewebpageInput)tempoInput).setUrlToTranslate(tmpVariableFrom_value);
-//                    else if(tmpVariableTo.equals("targetLanguage"))
-//                       ((com.certh.iti.cloud4all.restful.TranslatewebpageInput.TranslatewebpageInput)tempoInput).setTargetLanguage(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("Identifyimageswithoutaltattributeinwebpage"))
-//                {
-//                    if(tmpVariableTo.equals("url"))
-//                       ((com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageInput.IdentifyimageswithoutaltattributeinwebpageInput)tempoInput).setUrl(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("CallWebAnywhere"))
-//                {
-//                    if(tmpVariableTo.equals("urlToOpen"))
-//                       ((com.certh.iti.cloud4all.restful.CallWebAnywhereInput.CallWebAnywhereInput)tempoInput).setUrlToOpen(tmpVariableFrom_value);
-//                    else if(tmpVariableTo.equals("voiceLanguage"))
-//                       ((com.certh.iti.cloud4all.restful.CallWebAnywhereInput.CallWebAnywhereInput)tempoInput).setVoiceLanguage(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("CaptchaResolver"))
-//                {
-//                    if(tmpVariableTo.equals("captchaImageUrl"))
-//                       ((com.certh.iti.cloud4all.restful.CaptchaResolverInput.CaptchaResolverInput)tempoInput).setCaptchaImageUrl(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("TextToSpeech"))
-//                {
-//                    if(tmpVariableTo.equals("textToSpeak"))
-//                       ((com.certh.iti.cloud4all.restful.TextToSpeechInput.TextToSpeechInput)tempoInput).setTextToSpeak(tmpVariableFrom_value);
-//                }
-//                else if(tmpCurService.equals("FontConverter"))
-//                {
-//                    if(tmpVariableTo.equals("urlToConvertFont"))
-//                       ((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tempoInput).setUrlToConvertFont(tmpVariableFrom_value);
-//                    else if(tmpVariableTo.equals("targetFontFamily"))
-//                       ((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tempoInput).setTargetFontFamily(tmpVariableFrom_value);
-//                    else if(tmpVariableTo.equals("targetFontSize"))
-//                       ((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tempoInput).setTargetFontSize(tmpVariableFrom_value);
-//                    else if(tmpVariableTo.equals("targetColor"))
-//                       ((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tempoInput).setTargetColor(tmpVariableFrom_value);
-//                    else if(tmpVariableTo.equals("targetBackground"))
-//                       ((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tempoInput).setTargetBackground(tmpVariableFrom_value);
-//                }
-//                //----------------------------------------------------------//
-//                //(Step 4 of 5) ADD CONTENT HERE WHEN A NEW SERVICE IS ADDED//
-//                //----------------------------------------------------------//
-//            }
-//            
-//            //CALL THE CURRENT SERVICE
-//            if(tmpCurService.equals("IPtoLatLng"))
-//            {
-//                Response tempRes = call_IPtoLatLng((com.certh.iti.cloud4all.restful.IPtoLatLngInput.IPtoLatLngInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.IPtoLatLngOutput.IPtoLatLngOutput.class);
-//                tmpOutput.put("IPtoLatLng", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"IPtoLatLng\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().lastIndexOf('"')+1) + "\n},";
-//            }
-//            else if(tmpCurService.equals("Weather"))
-//            {
-//                Response tempRes = call_Weather((com.certh.iti.cloud4all.restful.WeatherInput.WeatherInput)tempoInput);
-//                
-//                Type listType = new TypeToken<List<com.certh.iti.cloud4all.restful.WeatherOutput.Day>>() {}.getType();
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), listType);
-//                tmpOutput.put("Weather", tempoOutput);
-//                
-//                String weatherResStr = tempRes.getEntity().toString();
-//                
-//                //condition
-//                String strToSearch = "\"condition";
-//                int firstIndex = weatherResStr.indexOf(strToSearch);
-//                String firstPartStr = weatherResStr.substring(0, firstIndex + strToSearch.length());
-//                String secondPartStr = weatherResStr.substring(firstIndex + strToSearch.length());
-//                int dayCounter = 1;
-//                while(secondPartStr.indexOf(strToSearch) != -1)
-//                {
-//                    secondPartStr = secondPartStr.replaceFirst(strToSearch, "\"" + Integer.toString(dayCounter) + "_condition");
-//                    dayCounter++;
-//                }
-//                weatherResStr = firstPartStr + secondPartStr;
-//                
-//                //high_celsius
-//                strToSearch = "\"high_celsius";
-//                firstIndex = weatherResStr.indexOf(strToSearch);
-//                firstPartStr = weatherResStr.substring(0, firstIndex + strToSearch.length());
-//                secondPartStr = weatherResStr.substring(firstIndex + strToSearch.length());
-//                dayCounter = 1;
-//                while(secondPartStr.indexOf(strToSearch) != -1)
-//                {
-//                    secondPartStr = secondPartStr.replaceFirst(strToSearch, "\"" + Integer.toString(dayCounter) + "_high_celsius");
-//                    dayCounter++;
-//                }
-//                weatherResStr = firstPartStr + secondPartStr;
-//                
-//                //high
-//                strToSearch = "\"high\"";
-//                firstIndex = weatherResStr.indexOf(strToSearch);
-//                firstPartStr = weatherResStr.substring(0, firstIndex + strToSearch.length());
-//                secondPartStr = weatherResStr.substring(firstIndex + strToSearch.length());
-//                dayCounter = 1;
-//                while(secondPartStr.indexOf(strToSearch) != -1)
-//                {
-//                    secondPartStr = secondPartStr.replaceFirst(strToSearch, "\"" + Integer.toString(dayCounter) + "_high\"");
-//                    dayCounter++;
-//                }
-//                weatherResStr = firstPartStr + secondPartStr;
-//                
-//                //low_celsius
-//                strToSearch = "\"low_celsius";
-//                firstIndex = weatherResStr.indexOf(strToSearch);
-//                firstPartStr = weatherResStr.substring(0, firstIndex + strToSearch.length());
-//                secondPartStr = weatherResStr.substring(firstIndex + strToSearch.length());
-//                dayCounter = 1;
-//                while(secondPartStr.indexOf(strToSearch) != -1)
-//                {
-//                    secondPartStr = secondPartStr.replaceFirst(strToSearch, "\"" + Integer.toString(dayCounter) + "_low_celsius");
-//                    dayCounter++;
-//                }
-//                weatherResStr = firstPartStr + secondPartStr;
-//                
-//                //low
-//                strToSearch = "\"low\"";
-//                firstIndex = weatherResStr.indexOf(strToSearch);
-//                firstPartStr = weatherResStr.substring(0, firstIndex + strToSearch.length());
-//                secondPartStr = weatherResStr.substring(firstIndex + strToSearch.length());
-//                dayCounter = 1;
-//                while(secondPartStr.indexOf(strToSearch) != -1)
-//                {
-//                    secondPartStr = secondPartStr.replaceFirst(strToSearch, "\"" + Integer.toString(dayCounter) + "_low\"");
-//                    dayCounter++;
-//                }
-//                weatherResStr = firstPartStr + secondPartStr;
-//                
-//                //day_of_week
-//                strToSearch = "\"day_of_week";
-//                firstIndex = weatherResStr.indexOf(strToSearch);
-//                firstPartStr = weatherResStr.substring(0, firstIndex + strToSearch.length());
-//                secondPartStr = weatherResStr.substring(firstIndex + strToSearch.length());
-//                dayCounter = 1;
-//                while(secondPartStr.indexOf(strToSearch) != -1)
-//                {
-//                    secondPartStr = secondPartStr.replaceFirst(strToSearch, "\"" + Integer.toString(dayCounter) + "_day_of_week");
-//                    dayCounter++;
-//                }
-//                weatherResStr = firstPartStr + secondPartStr;
-//                
-//                weatherResStr = weatherResStr.replaceAll("[{}]", "");       //remove all { and }
-//                weatherResStr = weatherResStr.replaceAll("\\[|\\]", "");    //remove all [ and ]
-//                
-//                finalResultStr = finalResultStr + "\n\"Weather\": {\n" + weatherResStr + "\n},";
-//            }
-//            else if(tmpCurService.equals("TelizeGeolocation"))
-//            {
-//                Response tempRes = call_TelizeGeolocation((com.certh.iti.cloud4all.restful.TelizeGeolocationInput.TelizeGeolocationInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.TelizeGeolocationOutput.TelizeGeolocationOutput.class);
-//                tmpOutput.put("TelizeGeolocation", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"TelizeGeolocation\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().lastIndexOf('"')+1) + "\n},";
-//            }
-//            else if(tmpCurService.equals("StaticImageMap"))
-//            {
-//                Response tempRes = call_StaticImageMap((com.certh.iti.cloud4all.restful.StaticImageMapInput.StaticImageMapInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.StaticImageMapOutput.StaticImageMapOutput.class);
-//                tmpOutput.put("StaticImageMap", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"StaticImageMap\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
-//            }
-//            else if(tmpCurService.equals("URLScreenshotGenerator"))
-//            {
-//                Response tempRes = call_URLScreenshotGenerator((com.certh.iti.cloud4all.restful.URLScreenshotGeneratorInput.URLScreenshotGeneratorInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.URLScreenshotGeneratorOutput.URLScreenshotGeneratorOutput.class);
-//                tmpOutput.put("URLScreenshotGenerator", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"URLScreenshotGenerator\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
-//            }
-//            else if(tmpCurService.equals("Translatewebpage"))
-//            {
-//                Response tempRes = call_Translatewebpage((com.certh.iti.cloud4all.restful.TranslatewebpageInput.TranslatewebpageInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.TranslatewebpageOutput.TranslatewebpageOutput.class);
-//                tmpOutput.put("Translatewebpage", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"Translatewebpage\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
-//            }
-//            else if(tmpCurService.equals("Identifyimageswithoutaltattributeinwebpage"))
-//            {
-//                Response tempRes = call_Identifyimageswithoutaltattributeinwebpage((com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageInput.IdentifyimageswithoutaltattributeinwebpageInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageOutput.IdentifyimageswithoutaltattributeinwebpageOutput.class);
-//                tmpOutput.put("Identifyimageswithoutaltattributeinwebpage", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"Identifyimageswithoutaltattributeinwebpage\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
-//            }
-//            else if(tmpCurService.equals("CallWebAnywhere"))
-//            {
-//                Response tempRes = call_CallWebAnywhere((com.certh.iti.cloud4all.restful.CallWebAnywhereInput.CallWebAnywhereInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.CallWebAnywhereOutput.CallWebAnywhereOutput.class);
-//                tmpOutput.put("CallWebAnywhere", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"CallWebAnywhere\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
-//            }
-//            else if(tmpCurService.equals("CaptchaResolver"))
-//            {
-//                Response tempRes = call_CaptchaResolver((com.certh.iti.cloud4all.restful.CaptchaResolverInput.CaptchaResolverInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.CaptchaResolverOutput.CaptchaResolverOutput.class);
-//                tmpOutput.put("CaptchaResolver", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"CaptchaResolver\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
-//            }
-//            else if(tmpCurService.equals("TextToSpeech"))
-//            {
-//                Response tempRes = call_TextToSpeech((com.certh.iti.cloud4all.restful.TextToSpeechInput.TextToSpeechInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.TextToSpeechOutput.TextToSpeechOutput.class);
-//                tmpOutput.put("TextToSpeech", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"TextToSpeech\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
-//            }
-//            else if(tmpCurService.equals("FontConverter"))
-//            {
-//                Response tempRes = call_FontConverter((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tempoInput);
-//                
-//                tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.FontConverterOutput.FontConverterOutput.class);
-//                tmpOutput.put("FontConverter", tempoOutput);
-//                
-//                finalResultStr = finalResultStr + "\n\"FontConverter\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
-//            }
-//            //----------------------------------------------------------//
-//            //(Step 5 of 5) ADD CONTENT HERE WHEN A NEW SERVICE IS ADDED//
-//            //----------------------------------------------------------//
-//        }      
-//        
-//        finalResultStr = "{ " + finalResultStr.substring(0, finalResultStr.lastIndexOf(",")) + "\n }";
-//        
-//        //output
-//        /*String tmpOutputStr = "";
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//                tmpOutputStr = mapper.defaultPrettyPrintingWriter().writeValueAsString(tmpOutput);
-//        } catch (IOException ex) {
-//                Logger.getLogger(SST_WebService.class.getName()).log(Level.SEVERE, null, ex);
-//        }*/
-//        return Response.ok(finalResultStr, MediaType.APPLICATION_JSON).build();
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         String finalResultStr = "";
         Map<String, Object> tmpOutput = new HashMap<String, Object>();
         Object tempoOutput = null;
-        String finalUrl = "";
+
         //execute the services sequentially
         for(int i=0; i<tmpInput.getInput().size(); i++)
         {
@@ -1434,20 +653,20 @@ public class SST_WebService
                 }
                 else if(tmpServiceFrom.equals("Translatewebpage"))
                 {
-                    if(tmpVariableFrom.equals("finalUrl"))
-                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TranslatewebpageOutput.TranslatewebpageOutput)tempoOutput).getFinalUrl();
+                    if(tmpVariableFrom.equals("urlOfTranslatedPage"))
+                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TranslatewebpageOutput.TranslatewebpageOutput)tempoOutput).getUrlOfTranslatedPage();
                     else if(tmpVariableFrom.equals("targetLanguageCode"))
                         tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.TranslatewebpageOutput.TranslatewebpageOutput)tempoOutput).getTargetLanguageCode();
                 }
                 else if(tmpServiceFrom.equals("Identifyimageswithoutaltattributeinwebpage"))
                 {
-                    if(tmpVariableFrom.equals("finalUrl"))
-                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageOutput.IdentifyimageswithoutaltattributeinwebpageOutput)tempoOutput).getFinalUrl();
+                    if(tmpVariableFrom.equals("urlOfGeneratedPage"))
+                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageOutput.IdentifyimageswithoutaltattributeinwebpageOutput)tempoOutput).getUrlOfGeneratedPage();
                 }
                 else if(tmpServiceFrom.equals("CallWebAnywhere"))
                 {
-                    if(tmpVariableFrom.equals("finalUrl"))
-                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.CallWebAnywhereOutput.CallWebAnywhereOutput)tempoOutput).getFinalUrl();
+                    if(tmpVariableFrom.equals("urlToBeCalled"))
+                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.CallWebAnywhereOutput.CallWebAnywhereOutput)tempoOutput).getUrlToBeCalled();
                 }
                 else if(tmpServiceFrom.equals("CaptchaResolver"))
                 {
@@ -1463,9 +682,8 @@ public class SST_WebService
                 }
                 else if(tmpServiceFrom.equals("FontConverter"))
                 {
-                	
-                    if(tmpVariableFrom.equals("finalUrl"))
-                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.FontConverterOutput.FontConverterOutput)tempoOutput).getFinalUrl();
+                    if(tmpVariableFrom.equals("fontConverterReturnedUrl"))
+                        tmpVariableFrom_value = (String)((com.certh.iti.cloud4all.restful.FontConverterOutput.FontConverterOutput)tempoOutput).getFontConverterReturnedUrl();
                 }
                 //----------------------------------------------------------//
                 //(Step 2 of 4) ADD CONTENT HERE WHEN A NEW SERVICE IS ADDED//
@@ -1508,33 +726,32 @@ public class SST_WebService
                 }
                 else if(tmpCurService.equals("URLScreenshotGenerator"))
                 {
-                    if(tmpVariableTo.equals("inputUrl"))
-                       ((com.certh.iti.cloud4all.restful.URLScreenshotGeneratorInput.URLScreenshotGeneratorInput)tempoInput).setInputUrl(tmpVariableFrom_value);
+                    if(tmpVariableTo.equals("url"))
+                       ((com.certh.iti.cloud4all.restful.URLScreenshotGeneratorInput.URLScreenshotGeneratorInput)tempoInput).setUrl(tmpVariableFrom_value);
                 }
                 else if(tmpCurService.equals("Translatewebpage"))
                 {
-                    if(tmpVariableTo.equals("inputUrl"))
-                       ((com.certh.iti.cloud4all.restful.TranslatewebpageInput.TranslatewebpageInput)tempoInput).setInputUrl(tmpVariableFrom_value);
+                    if(tmpVariableTo.equals("urlToTranslate"))
+                       ((com.certh.iti.cloud4all.restful.TranslatewebpageInput.TranslatewebpageInput)tempoInput).setUrlToTranslate(tmpVariableFrom_value);
                     else if(tmpVariableTo.equals("targetLanguage"))
                        ((com.certh.iti.cloud4all.restful.TranslatewebpageInput.TranslatewebpageInput)tempoInput).setTargetLanguage(tmpVariableFrom_value);
                 }
                 else if(tmpCurService.equals("Identifyimageswithoutaltattributeinwebpage"))
                 {
-                    if(tmpVariableTo.equals("inputUrl"))
-                       ((com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageInput.IdentifyimageswithoutaltattributeinwebpageInput)tempoInput).setInputUrl(tmpVariableFrom_value);
+                    if(tmpVariableTo.equals("url"))
+                       ((com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageInput.IdentifyimageswithoutaltattributeinwebpageInput)tempoInput).setUrl(tmpVariableFrom_value);
                 }
                 else if(tmpCurService.equals("CallWebAnywhere"))
                 {
-                    if(tmpVariableTo.equals("inputUrl"))
-                       ((com.certh.iti.cloud4all.restful.CallWebAnywhereInput.CallWebAnywhereInput)tempoInput).setInputUrl(tmpVariableFrom_value);
+                    if(tmpVariableTo.equals("urlToOpen"))
+                       ((com.certh.iti.cloud4all.restful.CallWebAnywhereInput.CallWebAnywhereInput)tempoInput).setUrlToOpen(tmpVariableFrom_value);
                     else if(tmpVariableTo.equals("voiceLanguage"))
                        ((com.certh.iti.cloud4all.restful.CallWebAnywhereInput.CallWebAnywhereInput)tempoInput).setVoiceLanguage(tmpVariableFrom_value);
                 }
                 else if(tmpCurService.equals("CaptchaResolver"))
                 {
-                	
-                    if(tmpVariableTo.equals("inputUrl"))
-                       ((com.certh.iti.cloud4all.restful.CaptchaResolverInput.CaptchaResolverInput)tempoInput).setInputUrl(tmpVariableFrom_value);
+                    if(tmpVariableTo.equals("captchaImageUrl"))
+                       ((com.certh.iti.cloud4all.restful.CaptchaResolverInput.CaptchaResolverInput)tempoInput).setCaptchaImageUrl(tmpVariableFrom_value);
                 }
                 else if(tmpCurService.equals("TextToSpeech"))
                 {
@@ -1543,9 +760,8 @@ public class SST_WebService
                 }
                 else if(tmpCurService.equals("FontConverter"))
                 {
-            
-                    if(tmpVariableTo.equals("inputUrl"))
-                       ((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tempoInput).setInputUrl(tmpVariableFrom_value);
+                    if(tmpVariableTo.equals("urlToConvertFont"))
+                       ((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tempoInput).setUrlToConvertFont(tmpVariableFrom_value);
                     else if(tmpVariableTo.equals("targetFontFamily"))
                        ((com.certh.iti.cloud4all.restful.FontConverterInput.FontConverterInput)tempoInput).setTargetFontFamily(tmpVariableFrom_value);
                     else if(tmpVariableTo.equals("targetFontSize"))
@@ -1688,14 +904,6 @@ public class SST_WebService
                 tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.URLScreenshotGeneratorOutput.URLScreenshotGeneratorOutput.class);
                 tmpOutput.put("URLScreenshotGenerator", tempoOutput);
                 
-				if (tempoOutput.toString().contains("finalUrl")) {
-					String[] splitted = tempoOutput.toString().split(
-							"finalUrl");
-					finalUrl = splitted[1].substring(0,
-							splitted[1].indexOf(",")).replace("=", "").trim();
-				//	System.out.println("MY URL "+finalUrl);
-				}
-                
                 finalResultStr = finalResultStr + "\n\"URLScreenshotGenerator\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
             }
             else if(tmpCurService.equals("Translatewebpage"))
@@ -1704,14 +912,6 @@ public class SST_WebService
                 
                 tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.TranslatewebpageOutput.TranslatewebpageOutput.class);
                 tmpOutput.put("Translatewebpage", tempoOutput);
-                
-                if (tempoOutput.toString().contains("finalUrl")) {
-					String[] splitted = tempoOutput.toString().split(
-							"finalUrl");
-					finalUrl = splitted[1].substring(0,
-							splitted[1].indexOf(",")).replace("=", "").trim();
-				//	System.out.println("MY URL "+finalUrl);
-				}
                 
                 finalResultStr = finalResultStr + "\n\"Translatewebpage\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
             }
@@ -1722,14 +922,6 @@ public class SST_WebService
                 tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.IdentifyimageswithoutaltattributeinwebpageOutput.IdentifyimageswithoutaltattributeinwebpageOutput.class);
                 tmpOutput.put("Identifyimageswithoutaltattributeinwebpage", tempoOutput);
                 
-                if (tempoOutput.toString().contains("finalUrl")) {
-                	String[] splitted = tempoOutput.toString().split(
-							"finalUrl");
-					finalUrl = splitted[1].substring(0,
-							splitted[1].indexOf(",")).replace("=", "").trim();
-				//	System.out.println("MY URL "+finalUrl);
-				}
-                
                 finalResultStr = finalResultStr + "\n\"Identifyimageswithoutaltattributeinwebpage\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
             }
             else if(tmpCurService.equals("CallWebAnywhere"))
@@ -1739,14 +931,6 @@ public class SST_WebService
                 tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.CallWebAnywhereOutput.CallWebAnywhereOutput.class);
                 tmpOutput.put("CallWebAnywhere", tempoOutput);
                 
-                if (tempoOutput.toString().contains("finalUrl")) {
-                	String[] splitted = tempoOutput.toString().split(
-							"finalUrl");
-					finalUrl = splitted[1].substring(0,
-							splitted[1].indexOf(",")).replace("=", "").trim();
-			//		System.out.println("MY URL "+finalUrl);
-				}
-                
                 finalResultStr = finalResultStr + "\n\"CallWebAnywhere\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
             }
             else if(tmpCurService.equals("CaptchaResolver"))
@@ -1755,14 +939,6 @@ public class SST_WebService
                 
                 tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.CaptchaResolverOutput.CaptchaResolverOutput.class);
                 tmpOutput.put("CaptchaResolver", tempoOutput);
-                
-                if (tempoOutput.toString().contains("finalUrl")) {
-                	String[] splitted = tempoOutput.toString().split(
-							"finalUrl");
-					finalUrl = splitted[1].substring(0,
-							splitted[1].indexOf(",")).replace("=", "").trim();
-				//	System.out.println("MY URL "+finalUrl);
-				}
                 
                 finalResultStr = finalResultStr + "\n\"CaptchaResolver\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
             }
@@ -1782,14 +958,6 @@ public class SST_WebService
                 tempoOutput = TranslationManager.getInstance().gson.fromJson(tempRes.getEntity().toString(), com.certh.iti.cloud4all.restful.FontConverterOutput.FontConverterOutput.class);
                 tmpOutput.put("FontConverter", tempoOutput);
                 
-                if (tempoOutput.toString().contains("finalUrl")) {
-                	String[] splitted = tempoOutput.toString().split(
-							"finalUrl");
-					finalUrl = splitted[1].substring(0,
-							splitted[1].indexOf(",")).replace("=", "").trim();
-				//	System.out.println("MY URL "+finalUrl);
-				}
-                
                 finalResultStr = finalResultStr + "\n\"FontConverter\": {\n" + tempRes.getEntity().toString().substring(tempRes.getEntity().toString().indexOf('"'), tempRes.getEntity().toString().length()-1) + "\n},";
             }
             //----------------------------------------------------------//
@@ -1797,7 +965,7 @@ public class SST_WebService
             //----------------------------------------------------------//
         }      
         
-        finalResultStr = "{ \"finalUrl\": \""+finalUrl+"\",\n \"details\": {" + finalResultStr.substring(0, finalResultStr.lastIndexOf(",")) + "\n } \n }";
+        finalResultStr = "{ " + finalResultStr.substring(0, finalResultStr.lastIndexOf(",")) + "\n }";
 
         return Response.ok(finalResultStr, MediaType.APPLICATION_JSON).build();
     }

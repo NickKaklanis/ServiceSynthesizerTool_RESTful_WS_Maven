@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "inputUrl",
+    "urlToTranslate",
     "targetLanguage"
 })
 public class TranslatewebpageInput {
@@ -27,8 +27,8 @@ public class TranslatewebpageInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    private String inputUrl;
+    @JsonProperty("urlToTranslate")
+    private String urlToTranslate;
     /**
      * 
      * (Required)
@@ -44,9 +44,9 @@ public class TranslatewebpageInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    public String getInputUrl() {
-        return inputUrl;
+    @JsonProperty("urlToTranslate")
+    public String getUrlToTranslate() {
+        return urlToTranslate;
     }
 
     /**
@@ -54,9 +54,9 @@ public class TranslatewebpageInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    public void setInputUrl(String inputUrl) {
-        this.inputUrl = inputUrl;
+    @JsonProperty("urlToTranslate")
+    public void setUrlToTranslate(String urlToTranslate) {
+        this.urlToTranslate = urlToTranslate;
     }
 
     /**

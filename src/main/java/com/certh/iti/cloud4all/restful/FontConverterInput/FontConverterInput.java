@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "inputUrl",
+    "urlToConvertFont",
     "targetFontFamily",
     "targetFontSize",
     "targetColor",
@@ -30,8 +30,8 @@ public class FontConverterInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    private String inputUrl;
+    @JsonProperty("urlToConvertFont")
+    private String urlToConvertFont;
     /**
      * 
      * (Required)
@@ -68,9 +68,9 @@ public class FontConverterInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    public String getInputUrl() {
-        return inputUrl;
+    @JsonProperty("urlToConvertFont")
+    public String getUrlToConvertFont() {
+        return urlToConvertFont;
     }
 
     /**
@@ -78,9 +78,9 @@ public class FontConverterInput {
      * (Required)
      * 
      */
-    @JsonProperty("inputUrl")
-    public void setInputUrl(String inputUrl) {
-        this.inputUrl = inputUrl;
+    @JsonProperty("urlToConvertFont")
+    public void setUrlToConvertFont(String urlToConvertFont) {
+        this.urlToConvertFont = urlToConvertFont;
     }
 
     /**
