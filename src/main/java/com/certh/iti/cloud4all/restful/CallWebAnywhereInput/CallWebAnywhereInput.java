@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "urlToOpen",
+    "inputUrl",
     "voiceLanguage"
 })
 public class CallWebAnywhereInput {
@@ -27,8 +27,8 @@ public class CallWebAnywhereInput {
      * (Required)
      * 
      */
-    @JsonProperty("urlToOpen")
-    private String urlToOpen;
+    @JsonProperty("inputUrl")
+    private String inputUrl;
     /**
      * 
      * (Required)
@@ -44,9 +44,9 @@ public class CallWebAnywhereInput {
      * (Required)
      * 
      */
-    @JsonProperty("urlToOpen")
-    public String getUrlToOpen() {
-        return urlToOpen;
+    @JsonProperty("inputUrl")
+    public String getInputUrl() {
+        return inputUrl;
     }
 
     /**
@@ -54,9 +54,9 @@ public class CallWebAnywhereInput {
      * (Required)
      * 
      */
-    @JsonProperty("urlToOpen")
-    public void setUrlToOpen(String urlToOpen) {
-        this.urlToOpen = urlToOpen;
+    @JsonProperty("inputUrl")
+    public void setInputUrl(String inputUrl) {
+        this.inputUrl = inputUrl;
     }
 
     /**

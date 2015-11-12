@@ -17,32 +17,32 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "fontConverterReturnedUrl"
+    "finalUrl"
 })
 public class FontConverterOutput {
 
     /**
      * 
      */
-    @JsonProperty("fontConverterReturnedUrl")
-    private String fontConverterReturnedUrl;
+    @JsonProperty("finalUrl")
+    private String finalUrl;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      */
-    @JsonProperty("fontConverterReturnedUrl")
-    public String getFontConverterReturnedUrl() {
-        return fontConverterReturnedUrl;
+    @JsonProperty("finalUrl")
+    public String getFinalUrl() {
+        return finalUrl;
     }
 
     /**
      * 
      */
-    @JsonProperty("fontConverterReturnedUrl")
-    public void setFontConverterReturnedUrl(String fontConverterReturnedUrl) {
-        this.fontConverterReturnedUrl = fontConverterReturnedUrl;
+    @JsonProperty("finalUrl")
+    public void setFinalUrl(String finalUrl) {
+        this.finalUrl = finalUrl;
     }
 
     @Override
